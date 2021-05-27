@@ -1,11 +1,5 @@
 # Updated for v0.44.9
 
-#---------------------#
-# SwiftFormat Options #
-#---------------------#
-
---swiftversion 5.3
-
 #--------------------#
 # Rule Configuration #
 #--------------------#
