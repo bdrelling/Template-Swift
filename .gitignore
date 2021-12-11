@@ -23,13 +23,12 @@ playground.xcworkspace
 
 ## Swift Package Manager
 .build/
-.swiftpm/ # generated when editing a Swift package in Xcode 11
+.swiftpm/ 
 
 ## CocoaPods
 Pods/
 
 ## fastlane
-
 fastlane/report.xml
 fastlane/screenshots/**/*.png
 fastlane/test_output
@@ -42,4 +41,4 @@ fastlane/screenshots
 fastlane/[Pp]review.html
 
 ## Dotenv
-.env.local # Contains keys that should NEVER be checked into the repository
+.env.local 
