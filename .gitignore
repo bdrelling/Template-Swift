@@ -1,7 +1,8 @@
 # Swift .gitignore
 #
-# Source: https://raw.githubusercontent.com/github/gitignore/main/Swift.gitignore
-# Last copied from source on December 10th, 2021
+# References:
+# - https://raw.githubusercontent.com/github/gitignore/main/Swift.gitignore
+# - https://github.com/vapor/vapor/blob/main/.gitignore
 
 ## OS X Folder Attributes
 .DS_Store
@@ -14,16 +15,22 @@
 *.dSYM.zip
 *.dSYM
 
-## Xcode User ettings
+## Xcode
 xcuserdata/
+DerivedData/
 
 ## Xcode Playgrounds
 timeline.xctimeline
 playground.xcworkspace
 
+# Visual Studio Code
+.vscode
+
 ## Swift Package Manager
+Packages
+Package.resolved
 .build/
-.swiftpm/ 
+.swiftpm/
 
 ## CocoaPods
 Pods/
@@ -41,4 +48,4 @@ fastlane/screenshots
 fastlane/[Pp]review.html
 
 ## Dotenv
-.env.local 
+.env.local
