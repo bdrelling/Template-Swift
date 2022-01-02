@@ -30,7 +30,6 @@ trailing_comma:
 excluded:
   - .build
   - .swiftpm
-  - DerivedData
   - Package.swift
   - '*/Package.swift'
   - '**/*/*+CoreDataProperties.swift'
