@@ -42,6 +42,7 @@
 
 --exclude .build
 --exclude .swiftpm
+--exclude DerivedData
 --exclude Package.swift
 --exclude */Package.swift
 --exclude "**/*/*+CoreDataProperties.swift"
