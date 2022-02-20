@@ -24,7 +24,7 @@ command -v mint >/dev/null 2>&1 || {
 # if there are any scripts in the scripts/git-hooks folder,
 # copy them into the .git/hooks folder which is not source controlled
 # This will replace any existing files
-cp -R -a scripts/git-hooks/. .git/hooks
+scripts/install_git_hooks.sh
 
 # Verify the script has completed
 echo "Setup complete."
