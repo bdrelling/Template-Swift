@@ -5,7 +5,7 @@ gem 'fastlane', '~> 2.204.3'
 gem 'xcode-install', '~> 2.8.0'
 
 # gems not needed by Fastlane
-gem 'rubocop', '~> 1.22.1', require: false
+gem 'rubocop', '~> 1.25.1', require: false
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)
