@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'dotenv', '~> 2.7.6'
-gem 'fastlane', '~> 2.204.3'
+gem 'fastlane', '~> 2.205.1'
 gem 'xcode-install', '~> 2.8.0'
 
 # gems not needed by Fastlane
