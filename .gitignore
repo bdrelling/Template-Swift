@@ -24,6 +24,7 @@ playground.xcworkspace
 
 # Visual Studio Code
 .vscode
+.devcontainer
 
 ## Swift Package Manager
 Packages
@@ -47,4 +48,10 @@ fastlane/screenshots
 fastlane/[Pp]review.html
 
 ## Dotenv
-.env.local
+.env
+.env.*
+
+## Build / Deploy Directories
+build/
+deploy/
+output/
