@@ -54,14 +54,16 @@ jobs:
           name: Output (macOS)
           path: ${{ env.DEPLOY_DIRECTORY }}
   swift_test_xcode:
-    name: swift test (Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
+    name: swift test (${{ matrix.compiler.platform }}, Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
     # Available Runners: https://github.com/actions/virtual-environments
     runs-on: ${{ matrix.compiler.runner }}
     needs: [prepare]
     strategy:
       matrix:
+        platform: [iOS, macOS, tvOS, watchOS]
         # Each version of Xcodes comes with a bundled version of Swift.
         # https://swiftversion.net
+        # https://xcodereleases.com
         compiler: [
             { runner: macos-11, xcode_version: 12.4, swift_version: 5.3.2 },
             { runner: macos-11, xcode_version: 12.5.1, swift_version: 5.4.2 },
@@ -80,14 +82,14 @@ jobs:
       - name: Swift Version Check
         run: swift --version
       - name: Run Tests
-        run: sh ./scripts/swift_test.sh
+        run: sh ./scripts/swift_test.sh --platform ${{ matrix.compiler.platform }}
         continue-on-error: true
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
-          name: Output (Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
+          name: Output (${{ matrix.compiler.platform }}, Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
           path: ${{ env.DEPLOY_DIRECTORY }}
       - uses: sarisia/actions-status-discord@v1
-        if: always()
+        if: failure()
         with:
           webhook: ${{ secrets.DISCORD_CI_WEBHOOK }}

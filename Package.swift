@@ -11,7 +11,7 @@ let package = Package(
         .watchOS(.v6),
     ],
     products: [
-        .library(name: "MyModule", targets: ["MyModule"])
+        .library(name: "MyModule", targets: ["MyModule"]),
     ],
     dependencies: [
         // add dependencies here
