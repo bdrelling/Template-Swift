@@ -87,3 +87,7 @@ jobs:
         with:
           name: Output (Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
           path: ${{ env.DEPLOY_DIRECTORY }}
+      - uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_CI_WEBHOOK }}
