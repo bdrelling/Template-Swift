@@ -87,6 +87,7 @@ swift_test() {
     echo "============================================================"
 }
 
+# TODO: Add ability to collect code coverage / xctestresult and pass in output directory.
 xcodebuild_test() {
     # TODO: We need to be able to detect the Module (if only single product) or Module-Package (if multiple products), pass as --scheme.
     command="xcodebuild clean test -scheme MyModule"
