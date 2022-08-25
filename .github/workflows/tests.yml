@@ -82,12 +82,12 @@ jobs:
       - name: Swift Version Check
         run: swift --version
       - name: Run Tests
-        run: sh ./scripts/swift_test.sh --platform ${{ matrix.compiler.platform }}
+        run: sh ./scripts/swift_test.sh --platform ${{ matrix.platform }}
         continue-on-error: true
       - name: Upload Step Output
         uses: actions/upload-artifact@v1
         with:
-          name: Output (${{ matrix.compiler.platform }}, Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
+          name: Output (${{ matrix.platform }}, Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
           path: ${{ env.DEPLOY_DIRECTORY }}
       - uses: sarisia/actions-status-discord@v1
         if: failure()
