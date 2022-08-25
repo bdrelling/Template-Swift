@@ -2,7 +2,7 @@
 
 [Brian Drelling](https://github.com/bdrelling)'s Swift project template.
 
-## :warning: Disclaime
+## :warning: Disclaimer
 
 This project is made publicly available for anyone curious. It is **NOT** intended for to be used as a template by others, as it caters heavily to Brian's formatting preferences, style guidelines, and working habits.
 
