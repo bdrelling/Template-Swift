@@ -1,183 +1,201 @@
-#!/bin/bash
+# #!/bin/bash
 
-#====================#
-# Defaults
-#====================#
+# set -e
 
-# Our default platform is macOS.
-# TODO: Detect macOS or Linux and switch accordingly?
-platform=macOS
+# #====================#
+# # Defaults
+# #====================#
 
-# Set our output directory. If none is set, use the DEPLOY_DIRECTORY environment variable by default.
-output=$DEPLOY_DIRECTORY
+# # Define the operating system we're running.
+# operating_system=$(uname)
 
-# Define the architecture our operating system is running on.
-arch=$(uname -m)
+# # Define the architecture our operating system is running on.
+# arch=$(uname -m)
 
-#====================#
-# Get Arguments
-#====================#
+# # Our default platform is Linux on Linux operating systems or macOS on Darwin (Apple) operating systems.
+# if [ $operating_system == 'Linux' ]; then
+#     platform=Linux
+# else
+#     platform=macOS
+# fi
 
-# This method isn't foolproof, as it relies on options being explicitly passed via alternating option/value order.
-# source: https://www.brianchildress.co/named-parameters-in-bash/
-while [ $# -gt 0 ]; do
-    if [[ $1 == *"--"* ]]; then
-        param="${1/--/}"
-        declare $param="$2"
-    fi
-    shift
-done
+# # Our default build method is "swift" for Linux or "xcodebuild" for Apple platforms.
+# # This can be overridden by passing the --method flag, though it is not recommended.
+# if [ $platform == "Linux" ]; then
+#     method=swift
+# else
+#     method=xcodebuild
+# fi
 
-#====================#
-# Functions
-#====================#
+# #====================#
+# # Get Arguments
+# #====================#
 
-swift_test() {
-    # Before we do anything, clean the build artifacts.
-    swift package clean
+# # This method isn't foolproof, as it relies on options being explicitly passed via alternating option/value order.
+# # source: https://www.brianchildress.co/named-parameters-in-bash/
+# while [ $# -gt 0 ]; do
+#     if [[ $1 == *"--"* ]]; then
+#         param="${1/--/}"
+#         declare $param="$2"
+#     fi
+#     shift
+# done
 
-    command="swift test -c debug"
+# #====================#
+# # Functions
+# #====================#
 
-    # If code coverage is enabled, add it to the command.
-    if [ -n "$codecov" ]; then
-        command+=" --enable-code-coverage"
-    fi
+# swift_test() {
+#     set -e
 
-    # If we're running on Linux, add the --enable-test-discovery flag.
-    # This is only required in Swift versions before 5.5, but adding it is safe.
-    if [ $platform == "Linux" ]; then
-        command+=" --enable-test-discovery"
-    fi
+#     # Before we do anything, clean the build artifacts.
+#     swift package clean
 
-    # If we're not running on the macOS or Linux platforms, we need to pass an SDK into the command.
-    if [[ $platform != "macOS" || $platform != "Linux" ]]; then
-        if [[ $arch != "arm64" && $arch != "x86_64" ]]; then
-            echo "ERROR: Invalid architecture '${arch}'!"
-            exit 0
-        fi
+#     command="swift test -c debug"
 
-        case $platform in
-        iOS)
-            command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk iphonesimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-ios16.0-simulator'"
-            ;;
-        tvOS)
-            command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk appletvsimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-tvos16.0-simulator'"
-            ;;
-        watchOS)
-            command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk watchsimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-watchos9.0-simulator'"
-            ;;
-        esac
-    fi
+#     # If code coverage is enabled, add it to the command.
+#     if [ -n "$codecov" ]; then
+#         command+=" --enable-code-coverage"
+#     fi
 
-    # Print the command for debugging before we run it.
-    echo "============================================================"
-    echo "Running command:"
-    echo "$ $command"
-    echo "============================================================"
+#     # If we're running on Linux, add the --enable-test-discovery flag.
+#     # This is only required in Swift versions before 5.5, but adding it is safe.
+#     if [ $platform == "Linux" ]; then
+#         command+=" --enable-test-discovery"
+#     fi
 
-    # Run our command.
-    eval "$command"
+#     # If we're not running on the macOS or Linux platforms, we need to pass an SDK into the command.
+#     if [[ $platform != "macOS" || $platform != "Linux" ]]; then
+#         if [[ $arch != "arm64" && $arch != "x86_64" ]]; then
+#             echo "ERROR: Invalid architecture '${arch}'!"
+#             exit 1
+#         fi
 
-    # If code coverage is enabled and our output directory is set, copy the coverage results into the output directory.
-    if [[ -n "$codecov" && -n "$output" ]]; then
-        # Copy code coverage results into the output directory.
-        cp $(swift test --show-codecov-path) "${output}/codecov.json"
-    fi
+#         case $platform in
+#         iOS)
+#             command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk iphonesimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-ios16.0-simulator'"
+#             ;;
+#         tvOS)
+#             command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk appletvsimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-tvos16.0-simulator'"
+#             ;;
+#         watchOS)
+#             command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk watchsimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-watchos9.0-simulator'"
+#             ;;
+#         esac
+#     fi
 
-    echo "============================================================"
-}
+#     # Print the command for debugging before we run it.
+#     echo "============================================================"
+#     echo "Running command:"
+#     echo "$ $command"
+#     echo "============================================================"
 
-# TODO: Add ability to collect code coverage / xctestresult and pass in output directory.
-xcodebuild_test() {
-    # TODO: We need to be able to detect the Module (if only single product) or Module-Package (if multiple products), pass as --scheme.
-    command="xcodebuild clean test -scheme MyModule"
+#     # Run our command.
+#     eval "$command"
 
-    # Add our destination to the xcodebuild command.
-    # To get valid destinations, run "xcodebuild -showdestinations -scheme <package_name>"
-    case $platform in
-    iOS)
-        # The iPhone 12 Pro supports Xcode 12+
-        command+=" -destination 'platform=iOS Simulator,name=iPhone 12 Pro'"
-        ;;
-    macOS)
-        command+=" -destination 'platform=OS X,arch=${arch}'"
-        ;;
-    tvOS)
-        xcodebuild -showdestinations -scheme MyModule
-        # command+=" -destination 'platform=tvOS Simulator,name=Apple TV 4K (at 1080p) (2nd generation)'"
-        ;;
-    watchOS)
-        xcodebuild -showdestinations -scheme MyModule
-        # command+=" -destination 'platform=watchOS Simulator,name=Apple Watch Series 7 - 45mm'"
-        ;;
-    Linux)
-        echo "ERROR: Linux cannot run xcodebuild!"
-        exit 0
-        ;;
-    esac
+#     # Copy code coverage results into the output directory, if applicable.
+#     if [[ -n "$codecov" && -n "$output" ]]; then
+#         echo "Copying code coverage results into directory '${output}'."
+#         cp $(swift test --show-codecov-path) "${output}/codecov.json"
+#     fi
 
-    # Print the command for debugging before we run it.
-    echo "============================================================"
-    echo "Running command:"
-    echo "$ $command"
-    echo "============================================================"
+#     echo "============================================================"
+# }
 
-    # Run our command.
-    eval "$command"
-}
+# # TODO: Add ability to collect code coverage / xctestresult and pass in output directory.
+# xcodebuild_test() {
+#     set -e
 
-validate_operating_system() {
-    operating_system=$(uname)
-    expected_operating_system
+#     # TODO: Get xcode_version here, and use it to switch on the devices below.
 
-    case $platform in
-    Linux)
-        expected_operating_system="Linux"
-        ;;
-    *)
-        expected_operating_system="Darwin"
-        ;;
-    esac
+#     # TODO: We need to be able to detect the Module (if only single product) or Module-Package (if multiple products), pass as --scheme.
+#     command="xcodebuild clean test -scheme MyModule"
 
-    if [ $operating_system != $expected_operating_system ]; then
-        echo "ERROR: Invalid operating system for platform '$platform'! Expected '$expected_operating_system', evaluated '$operating_system'."
-        exit 0
-    fi
-}
+#     # Add our destination to the xcodebuild command.
+#     # The devices used here support Xcode 12 and Xcode 13 explicitly.
+#     # To get valid destinations, run "xcodebuild -showdestinations -scheme <package_name>"
+#     case $platform in
+#     iOS)
+#         command+=" -destination 'platform=iOS Simulator,name=iPhone 12 Pro'"
+#         ;;
+#     macOS)
+#         command+=" -destination 'platform=macOS,arch=${arch}'"
+#         ;;
+#     tvOS)
+#         xcodebuild -showdestinations -scheme MyModule
+#         command+=" -destination 'platform=tvOS Simulator,name=Apple TV'"
+#         ;;
+#     watchOS)
+#         xcodebuild -showdestinations -scheme MyModule
+#         command+=" -destination 'platform=watchOS Simulator,name=Apple Watch Series 6 - 44mm'"
+#         ;;
+#     Linux)
+#         echo "ERROR: Linux cannot run xcodebuild!"
+#         exit 1
+#         ;;
+#     esac
 
-#====================#
-# Main
-#====================#
+#     # Print the command for debugging before we run it.
+#     echo "============================================================"
+#     echo "Running command:"
+#     echo "$ $command"
+#     echo "============================================================"
 
-# Validate our operating system before we do anything else.
-# For example, a build intended for Linux should not run on Darwin,
-# and a build intended for tvOS should not run on Linux.
-validate_operating_system
+#     # Run our command.
+#     eval "$command"
+# }
 
-# Create the output directory if it does not already exist.
-mkdir -p $output
+# run_tests() {
+#     set -e
 
-# Next, process the test function for the given platform.
-case $platform in
-iOS)
-    xcodebuild_test
-    ;;
-macOS)
-    # TODO: Should these be split out to separate build results?
-    swift_test
-    # xcodebuild_test
-    ;;
-tvOS)
-    xcodebuild_test
-    ;;
-watchOS)
-    xcodebuild_test
-    ;;
-Linux)
-    swift_test
-    ;;
-*)
-    echo "ERROR: The --platform option is required!"
-    exit 0
-    ;;
-esac
+#     # Next, process the test function for the given platform.
+#     case $method in
+#     swift)
+#         swift_test
+#         ;;
+#     xcodebuild)
+#         xcodebuild_test
+#         ;;
+#     *)
+#         echo "ERROR: Invalid build method '${method}'. Valid options are: swift, xcodebuild"
+#         exit 1
+#         ;;
+#     esac
+# }
+
+# validate_operating_system() {
+#     set -e
+
+#     case $platform in
+#     Linux)
+#         expected_operating_system="Linux"
+#         ;;
+#     *)
+#         expected_operating_system="Darwin"
+#         ;;
+#     esac
+
+#     if [ $operating_system != $expected_operating_system ]; then
+#         echo "ERROR: Invalid operating system for platform '$platform'! Expected '$expected_operating_system', evaluated '$operating_system'."
+#         exit 1
+#     fi
+# }
+
+# #====================#
+# # Main
+# #====================#
+
+# # Create the output directory if it does not already exist.
+# # We do this upfront because we may need this for outputting error logs as well.
+# if [ -n "$output" ]; then
+#     echo "Creating output directory '${output}'."
+#     mkdir -p $output
+# fi
+
+# # Validate our operating system before we do anything else.
+# # For example, a build intended for Linux should not run on Darwin,
+# # and a build intended for tvOS should not run on Linux.
+# validate_operating_system
+
+# # Run our tests.
+# run_tests
