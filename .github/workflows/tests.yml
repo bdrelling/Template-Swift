@@ -54,7 +54,7 @@ jobs:
           name: Output (macOS)
           path: ${{ env.DEPLOY_DIRECTORY }}
   swift_test_xcode:
-    name: swift test (${{ matrix.compiler.platform }}, Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
+    name: swift test (${{ matrix.platform }}, Xcode ${{ matrix.compiler.xcode_version }}, Swift ${{ matrix.compiler.swift_version }})
     # Available Runners: https://github.com/actions/virtual-environments
     runs-on: ${{ matrix.compiler.runner }}
     needs: [prepare]

@@ -80,9 +80,6 @@ swift_test() {
 
     # If code coverage is enabled and our output directory is set, copy the coverage results into the output directory.
     if [[ -n "$codecov" && -n "$output" ]]; then
-        # Create the output directory if it does not already exist.
-        mkdir -p $output
-
         # Copy code coverage results into the output directory.
         cp $(swift test --show-codecov-path) "${output}/codecov.json"
     fi
@@ -151,8 +148,13 @@ validate_operating_system() {
 # Main
 #====================#
 
-# First, validate our operating system.
+# Validate our operating system before we do anything else.
+# For example, a build intended for Linux should not run on Darwin,
+# and a build intended for tvOS should not run on Linux.
 validate_operating_system
+
+# Create the output directory if it does not already exist.
+mkdir -p $output
 
 # Next, process the test function for the given platform.
 case $platform in
