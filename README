@@ -1,8 +1,0 @@
-# Template-Swift
-
-New projects
-
-## Preparing for TestFlight
-
-- Add the following keys to your `Info.plist`:
-  - `App Uses Non-Exempt Encryption` = `NO`
