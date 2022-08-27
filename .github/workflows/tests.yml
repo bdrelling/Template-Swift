@@ -1,46 +1,42 @@
-name: Swift Test (Vapor)
-
-# Tests a Vapor website for Swift 5.6 (latest stable Vapor version) on macOS and Linux.
+name: Tests
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'Plugins/**'
+      - 'Snippets/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '**.swift'
+      - '**.resolved'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'Plugins/**'
+      - 'Snippets/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '**.swift'
+      - '**.resolved'
 
 jobs:
-  prepare:
-    uses: bdrelling/ci/.github/workflows/prepare.yml@main
-  swift_test_apple:
-    uses: bdrelling/ci/.github/workflows/swift_test_apple.yml@main
-    needs: [prepare]
+  swift_test:
+    uses: bdrelling/ci/.github/workflows/swift_test_vapor_package.yml@main
+    secrets: inherit
     with:
-      scheme: ${{ inputs.scheme }}
-      subcommand: ${{ inputs.subcommand }}
-      xcode_version: 13.4
-      platform: macOS
-      build_method: swift
-  swift_test_linux:
-    uses: bdrelling/ci/.github/workflows/swift_test_linux.yml@main
-    needs: [prepare]
-    with:
-      scheme: ${{ inputs.scheme }}
-      subcommand: ${{ inputs.subcommand }}
-      swift_version: 5.6
-  send_notifications:
+      scheme: MyModule
+  follow_up:
     runs-on: ubuntu-latest
-    needs: [swift_test_apple, swift_test_linux]
-    if: failure()
+    needs: [swift_test]
     steps:
-      - name: Send Discord Notification
-        uses: sarisia/actions-status-discord@v1
-        with:
-          webhook: ${{ secrets.DISCORD_CI_WEBHOOK }}
-          title: Tests Failed
-          status: Failure
-          color: 0xff0000
-  troubleshooting:
-    runs-on: ubuntu-latest
-    needs: [swift_test_apple, swift_test_linux]
-    if: always()
-    steps:
-      - run: echo apple ${{ needs.swift_test_apple.result }}
-      - run: echo linux ${{ needs.swift_test_linux.result }}
+      - run: echo ${{ needs.swift_test.outputs }}
+      - run: echo ${{ needs.swift_test.result }}
+  # swift_test:
+  #   uses: bdrelling/ci/.github/workflows/swift_test_universal_package_5_3.yml@main
+  #   secrets: inherit
+  #   with:
+  #     scheme: MyModule
