@@ -6,57 +6,6 @@ on:
     branches: [main]
 
 jobs:
-  prepare:
-    uses: bdrelling/ci/.github/workflows/prepare.yml@main
   swift_test:
-    runs-on: ${{ matrix.inputs.runner }}
-    needs: [prepare]
-    strategy:
-      fail-fast: false
-      matrix:
-        inputs:
-          - { runner: ubuntu-latest, platform: Linux, swift_version: 5.5 }
-          - { runner: macos-11, platform: macOS, swift_version: 5.4 }
-          - { runner: macos-12, platform: macOS, swift_version: 5.6 }
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: ./.github/actions/swift-test
-        with:
-          scheme: MyModule
-          platform: ${{ matrix.inputs.platform }}
-          swift-version: ${{ matrix.inputs.swift_version }}
-  troubleshooting:
-    runs-on: ubuntu-latest
-    needs: [swift_test]
-    if: always()
-    steps:
-      - name: machine echo github
-        env: { CONTENT: '${{ toJSON(github) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo env
-        env: { CONTENT: '${{ toJSON(env) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo job
-        env: { CONTENT: '${{ toJSON(job) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo steps
-        env: { CONTENT: '${{ toJSON(steps) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo runner
-        env: { CONTENT: '${{ toJSON(runner) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo secrets
-        env: { CONTENT: '${{ toJSON(secrets) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo strategy
-        env: { CONTENT: '${{ toJSON(strategy) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo matrix
-        env: { CONTENT: '${{ toJSON(matrix) }}' }
-        run: 'echo $CONTENT'
-      - name: machine echo needs
-        run: echo '${{ toJSON(needs) }}'
-      - name: machine echo inputs
-        env: { CONTENT: '${{ toJSON(inputs) }}' }
-        run: 'echo $CONTENT'
+    uses: ./.github/workflows/swift_test.yml
+    secrets: inherit
