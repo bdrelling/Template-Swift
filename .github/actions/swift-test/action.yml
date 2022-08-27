@@ -95,7 +95,7 @@ runs:
 
     - name: Run Apple Tests
       # TODO: the --output command here is brittle since it can pass an empty string and break the next argument.
-      run: ${{ github.action_path }}/scripts/swift_test.sh -s -- --scheme ${{ inputs.scheme }} --method ${{ inputs.build-method }} --platform ${{ inputs.platform }} --subcommand ${{ inputs.subcommand }} --output ${{ inputs.output }}
+      run: ${{ github.action_path }}/scripts/swift_test.sh -s -- '--scheme ${{ inputs.scheme }} --method ${{ inputs.build-method }} --platform ${{ inputs.platform }} --subcommand ${{ inputs.subcommand }} --output ${{ inputs.output }}'
       shell: bash
 
     - name: Upload Step Output
