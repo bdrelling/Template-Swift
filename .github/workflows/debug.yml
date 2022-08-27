@@ -9,7 +9,7 @@ jobs:
   prepare:
     uses: bdrelling/ci/.github/workflows/prepare.yml@main
   swift_test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: [prepare]
     strategy:
       fail-fast: false
