@@ -35,10 +35,10 @@ jobs:
     if: always()
     steps:
       - name: needs
-        run: echo ${{ toJSON(needs) }}
-      - run: echo ${{ toJSON(needs.swift_test) }}
-      - run: echo ${{ toJSON(needs.swift_test.outputs) }}
-      - run: echo ${{ needs.swift_test.result }}
+        run: echo '${{ toJSON(needs) }}'
+      - run: echo '${{ toJSON(needs.swift_test) }}'
+      - run: echo '${{ toJSON(needs.swift_test.outputs) }}'
+      - run: echo '${{ needs.swift_test.result }}'
   # swift_test:
   #   uses: bdrelling/ci/.github/workflows/swift_test_universal_package_5_3.yml@main
   #   secrets: inherit
