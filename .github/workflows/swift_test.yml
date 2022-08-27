@@ -1,9 +1,7 @@
-name: Debug
+name: Swift Test
 
 on:
   workflow_call:
-  push:
-    branches: [main]
 
 jobs:
   prepare:
