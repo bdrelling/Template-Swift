@@ -6,7 +6,6 @@ on:
 jobs:
   troubleshooting:
     runs-on: ubuntu-latest
-    if: always()
     steps:
       - name: machine echo github
         env: { CONTENT: '${{ toJSON(github) }}' }
