@@ -24,7 +24,7 @@ jobs:
       - uses: bdrelling/swift-test-action@main
         with:
           scheme: MyModule
-          swift_version: ${{ matrix.inputs.swift_version }}
+          swift-version: ${{ matrix.inputs.swift_version }}
   troubleshooting:
     runs-on: ubuntu-latest
     needs: [swift_test]
