@@ -18,9 +18,9 @@ on:
 
 jobs:
   prepare:
-    uses: bdrelling/ci/.github/workflows/prepare.yml
+    uses: bdrelling/ci/.github/workflows/prepare.yml@main
   swift_test_apple:
-    uses: bdrelling/ci/.github/workflows/swift_test_apple.yml
+    uses: bdrelling/ci/.github/workflows/swift_test_apple.yml@main
     needs: [prepare]
     with:
       scheme: ${{ inputs.scheme }}
@@ -29,7 +29,7 @@ jobs:
       platform: macOS
       build_method: swift
   swift_test_linux:
-    uses: bdrelling/ci/.github/workflows/swift_test_linux.yml
+    uses: bdrelling/ci/.github/workflows/swift_test_linux.yml@main
     needs: [prepare]
     with:
       scheme: ${{ inputs.scheme }}
