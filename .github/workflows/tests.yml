@@ -29,6 +29,12 @@ jobs:
     secrets: inherit
     with:
       scheme: MyModule
+  follow_up:
+    runs-on: ubuntu-latest
+    needs: [swift_test]
+    steps:
+      - run: echo ${{ needs.swift_test.outputs }}
+      - run: echo ${{ needs.swift_test.result }}
   # swift_test:
   #   uses: bdrelling/ci/.github/workflows/swift_test_universal_package_5_3.yml@main
   #   secrets: inherit
