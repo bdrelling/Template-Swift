@@ -4,8 +4,24 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'Plugins/**'
+      - 'Snippets/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '**.swift'
+      - '**.resolved'
   pull_request:
     branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'Plugins/**'
+      - 'Snippets/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '**.swift'
+      - '**.resolved'
 
 jobs:
   swift_test:
