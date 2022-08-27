@@ -3,18 +3,8 @@ name: Swift Test (Vapor)
 # Tests a Vapor website for Swift 5.6 (latest stable Vapor version) on macOS and Linux.
 
 on:
-  workflow_call:
-    inputs:
-      scheme:
-        required: true
-        type: string
-      subcommand:
-        required: false
-        type: string
-        default: test
-    secrets:
-      DISCORD_CI_WEBHOOK:
-        required: true
+  push:
+    branches: [main]
 
 jobs:
   prepare:
