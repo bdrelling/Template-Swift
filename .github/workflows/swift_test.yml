@@ -1,14 +1,14 @@
 name: Debug
 
 on:
-  workflow_dispatch:
+  workflow_call:
   push:
     branches: [main]
 
 jobs:
   prepare:
     uses: bdrelling/ci/.github/workflows/prepare.yml@main
-  swift_test:
+  swift_test_apple:
     runs-on: ${{ matrix.inputs.runner }}
     needs: [prepare]
     strategy:
@@ -16,18 +16,6 @@ jobs:
       matrix:
         inputs:
           [
-            {
-              runner: ubuntu-latest,
-              platform: Linux,
-              build-method: swift,
-              swift-version: 5.4,
-            },
-            {
-              runner: ubuntu-latest,
-              platform: Linux,
-              build-method: swift,
-              swift-version: 5.6,
-            },
             {
               runner: macos-11,
               platform: macOS,
@@ -62,8 +50,26 @@ jobs:
           platform: ${{ matrix.inputs.platform }}
           build-method: ${{ matrix.inputs.build-method }}
           swift-version: ${{ matrix.inputs.swift-version }}
+  swift_test_linux:
+    runs-on: ubuntu-latest
+    container: swift:${{ matrix.swift-version }}-focal
+    needs: [prepare]
+    strategy:
+      fail-fast: false
+      matrix:
+        swift_version: [5.4, 5.6]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/swift-test
+        with:
+          scheme: MyModule
+          platform: ${{ matrix.inputs.platform }}
+          build-method: ${{ matrix.inputs.build-method }}
+          swift-version: ${{ matrix.inputs.swift-version }}
   troubleshooting:
     uses: ./.github/workflows/troubleshooting.yml
+    needs: [swift_test_apple, swift_test_linux]
   # troubleshooting:
   #   runs-on: ubuntu-latest
   #   needs: [swift_test]
