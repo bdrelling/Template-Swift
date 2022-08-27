@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v2
       - uses: bdrelling/swift-test-action@main
         with:
+          scheme: MyModule
           swift_version: ${{ matrix.swift_version }}
   troubleshooting:
     runs-on: ubuntu-latest
