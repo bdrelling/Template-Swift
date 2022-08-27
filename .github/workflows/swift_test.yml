@@ -8,6 +8,7 @@ on:
 jobs:
   prepare:
     uses: bdrelling/ci/.github/workflows/prepare.yml@main
+  # TODO: Add a job here that builds the matrix for the next step, based on minimum_swift_version and platforms
   swift_test_apple:
     runs-on: ${{ matrix.inputs.runner }}
     needs: [prepare]
@@ -57,16 +58,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        swift_version: [5.4, 5.6]
+        swift-version: [5.4, 5.6]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - uses: ./.github/actions/swift-test
         with:
           scheme: MyModule
-          platform: ${{ matrix.inputs.platform }}
-          build-method: ${{ matrix.inputs.build-method }}
-          swift-version: ${{ matrix.inputs.swift-version }}
+          platform: Linux
+          swift-version: ${{ matrix.swift-version }}
   troubleshooting:
     uses: ./.github/workflows/troubleshooting.yml
     needs: [swift_test_apple, swift_test_linux]
