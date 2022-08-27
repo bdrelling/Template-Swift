@@ -6,7 +6,6 @@ on:
 jobs:
   troubleshooting:
     runs-on: ubuntu-latest
-    needs: [swift_test]
     if: always()
     steps:
       - name: machine echo github
