@@ -93,9 +93,19 @@ runs:
     #   run: test
     #   uses: 'docker://_/swift:5.6-focal'
 
+    - name: Print Environment
+      run: printenv
+      shell: sh
+
     - name: Run Apple Tests
       # TODO: the --output command here is brittle since it can pass an empty string and break the next argument.
-      run: ${{ github.action_path }}/scripts/swift_test.sh -s -- '--scheme ${{ inputs.scheme }} --method ${{ inputs.build-method }} --platform ${{ inputs.platform }} --subcommand ${{ inputs.subcommand }} --output ${{ inputs.output }}'
+      # env:
+      #   SWIFT_TEST_SCHEME: ${{ inputs.scheme }}
+      #   SWIFT_TEST_SCHEME: ${{ inputs.scheme }}
+      #   SWIFT_TEST_SCHEME: ${{ inputs.scheme }}
+      #   SWIFT_TEST_SCHEME: ${{ inputs.scheme }}
+      #   SWIFT_TEST_SCHEME: ${{ inputs.scheme }}
+      run: ${{ github.action_path }}/scripts/swift_test.sh --scheme ${{ inputs.scheme }} --method ${{ inputs.build-method }} --platform ${{ inputs.platform }} --subcommand ${{ inputs.subcommand }} --output ${{ inputs.output }}
       shell: bash
 
     - name: Upload Step Output
