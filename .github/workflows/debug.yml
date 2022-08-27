@@ -15,15 +15,16 @@ jobs:
       fail-fast: false
       matrix:
         inputs:
-          - { runner: ubuntu-latest, swift_version: 5.5 }
-          - { runner: macos-11, swift_version: 5.4 }
-          - { runner: macos-12, swift_version: 5.6 }
+          - { runner: ubuntu-latest, platform: Linux, swift_version: 5.5 }
+          - { runner: macos-11, platform: macOS, swift_version: 5.4 }
+          - { runner: macos-12, platform: macOS, swift_version: 5.6 }
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: bdrelling/swift-test-action@main
+      - uses: ./.github/actions/swift-test
         with:
           scheme: MyModule
+          platform: ${{ matrix.inputs.platform }}
           swift-version: ${{ matrix.inputs.swift_version }}
   troubleshooting:
     runs-on: ubuntu-latest
