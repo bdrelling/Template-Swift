@@ -25,7 +25,7 @@ on:
 
 jobs:
   swift_test:
-    uses: bdrelling/ci/.github/workflows/swift_test_vapor_website.yml@main
+    uses: bdrelling/ci/.github/workflows/swift_test_vapor_package.yml@main
     secrets: inherit
     with:
       scheme: MyModule
