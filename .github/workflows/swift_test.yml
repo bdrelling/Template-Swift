@@ -36,57 +36,22 @@ jobs:
     steps:
       - run: echo '${{ needs.test-matrix.outputs.test-matrix }}'
   swift_test:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.inputs.platform }} (${{ matrix.inputs.build-method }}, Swift ${{ matrix.inputs.swift-version }})
+    runs-on: ${{ matrix.inputs.runner }}
     needs: [test-matrix]
     strategy:
       fail-fast: false
       matrix:
         inputs: ${{ fromJSON(needs.test-matrix.outputs.test-matrix) }}
     steps:
-      - run: echo '${{ toJSON(matrix.inputs) }}'
-  # swift_test_apple:
-  #   name: ${{ matrix.inputs.platform }} (Swift ${{ matrix.inputs.swift-version }})
-  #   runs-on: ${{ matrix.inputs.runner }}
-  #   needs: [example]
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       inputs:
-  #         [
-  #           {
-  #             runner: macos-11,
-  #             platform: macOS,
-  #             build-method: swift,
-  #             swift-version: 5.4,
-  #           },
-  #           {
-  #             runner: macos-12,
-  #             platform: macOS,
-  #             build-method: swift,
-  #             swift-version: 5.6,
-  #           },
-  #           {
-  #             runner: macos-11,
-  #             platform: macOS,
-  #             build-method: xcodebuild,
-  #             swift-version: 5.4,
-  #           },
-  #           {
-  #             runner: macos-12,
-  #             platform: macOS,
-  #             build-method: xcodebuild,
-  #             swift-version: 5.6,
-  #           },
-  #         ]
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - uses: ./.github/actions/swift-test
-  #       with:
-  #         scheme: MyModule
-  #         platform: ${{ matrix.inputs.platform }}
-  #         build-method: ${{ matrix.inputs.build-method }}
-  #         swift-version: ${{ matrix.inputs.swift-version }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/swift-test
+        with:
+          scheme: MyModule
+          platform: ${{ matrix.inputs.platform }}
+          build-method: ${{ matrix.inputs.build-method }}
+          swift-version: ${{ matrix.inputs.swift-version }}
   # swift_test_linux:
   #   name: Linux (Swift ${{ matrix.swift-version }})
   #   runs-on: ubuntu-latest
