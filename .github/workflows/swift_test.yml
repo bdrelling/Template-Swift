@@ -3,9 +3,13 @@ name: Swift Test
 on:
   workflow_call:
     inputs:
-      platforms:
+      scheme:
         required: true
         type: string
+      platforms:
+        required: false
+        type: string
+        default: 'macOS'
       swift-versions:
         required: false
         type: string
