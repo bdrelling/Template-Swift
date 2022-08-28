@@ -2,45 +2,32 @@ name: Tests
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [main]
-  #   paths:
-  #     - '.github/workflows/tests.yml'
-  #     - 'Plugins/**'
-  #     - 'Snippets/**'
-  #     - 'Sources/**'
-  #     - 'Tests/**'
-  #     - '**.swift'
-  #     - '**.resolved'
-  # pull_request:
-  #   branches: [main]
-  #   paths:
-  #     - '.github/workflows/tests.yml'
-  #     - 'Plugins/**'
-  #     - 'Snippets/**'
-  #     - 'Sources/**'
-  #     - 'Tests/**'
-  #     - '**.swift'
-  #     - '**.resolved'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'Plugins/**'
+      - 'Snippets/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '**.swift'
+      - '**.resolved'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'Plugins/**'
+      - 'Snippets/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '**.swift'
+      - '**.resolved'
 
 jobs:
   swift_test:
-    uses: bdrelling/ci/.github/workflows/swift_test_vapor_package.yml@main
+    uses: bdrelling/ci/.github/workflows/swift_test.yml@main
     secrets: inherit
     with:
       scheme: MyModule
-  follow_up:
-    runs-on: ubuntu-latest
-    needs: [swift_test]
-    if: always()
-    steps:
-      - name: needs
-        run: echo '${{ toJSON(needs) }}'
-      - run: echo '${{ toJSON(needs.swift_test) }}'
-      - run: echo '${{ toJSON(needs.swift_test.outputs) }}'
-      - run: echo '${{ needs.swift_test.result }}'
-  # swift_test:
-  #   uses: bdrelling/ci/.github/workflows/swift_test_universal_package_5_3.yml@main
-  #   secrets: inherit
-  #   with:
-  #     scheme: MyModule
+      platforms: macOS Linux
+      swift-versions: 5.4 5.6
