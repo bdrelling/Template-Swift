@@ -64,13 +64,13 @@ for platform in "${platforms_array[@]}"; do
         runner=$(get_runner $platform $swift_version)
 
         if [[ $platform == 'ios' || $platform == 'macos' || $platform == 'tvos' || $platform == 'watchos' ]]; then
-            output="{ runner: ${runner}, platform: ${platform}, build-method: xcodebuild, swift-version: '${swift_version}' },"
+            output="{ 'runner': '${runner}', 'platform': '${platform}', 'build-method': 'xcodebuild', 'swift-version': '${swift_version}' },"
             if [ $debug == 'true' ]; then echo "    $output"; fi
             test_matrix+="$output"
         fi
 
         if [[ $platform == 'macos' || $platform == 'linux' ]]; then
-            output="{ runner: ${runner}, platform: ${platform}, build-method: swift, swift-version: '${swift_version}' },"
+            output="{ 'runner': '${runner}', 'platform': '${platform}', 'build-method': 'swift', 'swift-version': '${swift_version}' },"
             if [ $debug == 'true' ]; then echo "    $output"; fi
             test_matrix+="$output"
         fi
