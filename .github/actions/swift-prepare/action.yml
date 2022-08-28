@@ -6,6 +6,10 @@ branding:
   icon: 'terminal'
   color: 'purple'
 inputs:
+  debug:
+    description: 'Whether or not to print debugging information.'
+    required: false
+    default: 'false'
   platforms:
     description: 'A space-delimited list of Swift-compatible platforms to test on.'
     required: false
@@ -23,6 +27,8 @@ runs:
   steps:
     - name: Get Test Matrix
       id: get-test-matrix
+      env:
+        DEBUG_SWIFT_TEST_MATRIX: ${{ inputs.debug }}
       run: scripts/get_test_matrix.sh '${{ inputs.platforms }}' '${{ inputs.swift-versions }}'
       shell: bash
       working-directory: ${{ github.action_path }}

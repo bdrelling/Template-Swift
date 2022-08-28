@@ -19,6 +19,8 @@ jobs:
         with:
           platforms: iOS tvOS macOS watchOS Linux
           swift-versions: 5.3 5.5
+          debug: true
+      - run: echo '${{ steps.test-matrix.outputs.test-matrix }}'
     outputs:
       test-inputs: ${{ steps.test-matrix.outputs.test-matrix }}
   swift_test:
