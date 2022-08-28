@@ -3,7 +3,7 @@
 set -e
 
 #====================#
-# Defaults
+# Define Argument Defaults
 #====================#
 
 # Define the operating system we're running.
@@ -17,17 +17,17 @@ subcommand='test'
 
 # Our default platform is Linux on Linux operating systems or macOS on Darwin (Apple) operating systems.
 if [ $operating_system == 'Linux' ]; then
-    platform=Linux
+    platform='linux'
 else
-    platform=macOS
+    platform='macos'
 fi
 
 # Our default build method is "swift" for Linux or "xcodebuild" for Apple platforms.
 # This can be overridden by passing the --method flag, though it is not recommended.
-if [ $platform == "Linux" ]; then
-    method=swift
+if [ $platform == 'Linux' ]; then
+    method='swift'
 else
-    method=xcodebuild
+    method='xcodebuild'
 fi
 
 #====================#
@@ -44,13 +44,26 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+#====================#
+# Validate Arguments
+#====================#
+
 if [ -z "$scheme" ]; then
     echo "ERROR: Scheme is required!"
     exit 1
 fi
 
 #====================#
-# Functions
+# Sanitize Arguments
+#====================#
+
+# Convert our arguments to lowercase for more defensive comparisons.
+platform=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
+method=$(echo "$method" | tr '[:upper:]' '[:lower:]')
+subcommand=$(echo "$subcommand" | tr '[:upper:]' '[:lower:]')
+
+#====================#
+# Define Functions
 #====================#
 
 swift_test() {
@@ -80,26 +93,26 @@ swift_test() {
 
     # If we're running on Linux, add the --enable-test-discovery flag.
     # This is only required in Swift versions before 5.5, but adding it is safe.
-    if [ $platform == "Linux" ]; then
+    if [ $platform == 'linux' ]; then
         command+=" --enable-test-discovery"
     fi
 
     # If we're not running on the macOS or Linux platforms, we need to pass an SDK into the command.
-    # TODO: This sort of testing doesn't seem to work well, and only works on macOS 12.0+ / Xcode 14+.
-    if [[ $platform != "macOS" || $platform != "Linux" ]]; then
-        if [[ $arch != "arm64" && $arch != "x86_64" ]]; then
+    # TODO: This sort of testing doesn't seem to work well, and currently only works on macOS 12.0+ / Xcode 14+ as written.
+    if [[ $platform != 'macos' || $platform != 'linux' ]]; then
+        if [[ $arch != 'arm64' && $arch != 'x86_64' ]]; then
             echo "ERROR: Invalid architecture '${arch}'!"
             exit 1
         fi
 
         case $platform in
-        iOS)
+        ios)
             command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk iphonesimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-ios16.0-simulator'"
             ;;
-        tvOS)
+        tvos)
             command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk appletvsimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-tvos16.0-simulator'"
             ;;
-        watchOS)
+        watchos)
             command+=" -Xswiftc '-sdk' -Xswiftc '$(xcrun --sdk watchsimulator --show-sdk-path)' -Xswiftc '-target' -Xswiftc '${arch}-apple-watchos9.0-simulator'"
             ;;
         esac
@@ -146,22 +159,22 @@ xcodebuild_test() {
     # To get valid destinations, run "xcodebuild -showdestinations -scheme <package_name>"
     # TODO: Investigate generic platform usage -- it works sometimes, not always
     case $platform in
-    iOS)
+    ios)
         # command+=" -destination 'generic/platform=ios'"
         command+=" -destination 'platform=iOS Simulator,name=iPhone 12 Pro'"
         ;;
-    macOS)
+    macos)
         command+=" -destination 'platform=macOS,arch=${arch}'"
         ;;
-    tvOS)
+    tvos)
         # command+=" -destination 'generic/platform=tvos'"
         command+=" -destination 'platform=tvOS Simulator,name=Apple TV'"
         ;;
-    watchOS)
+    watchos)
         # command+=" -destination 'generic/platform=watchos'"
         command+=" -destination 'platform=watchOS Simulator,name=Apple Watch Series 6 - 44mm'"
         ;;
-    Linux)
+    linux)
         echo "ERROR: Linux cannot run xcodebuild!"
         exit 1
         ;;
@@ -199,11 +212,11 @@ validate_operating_system() {
     set -e
 
     case $platform in
-    Linux)
-        expected_operating_system="Linux"
+    linux)
+        expected_operating_system='Linux'
         ;;
     *)
-        expected_operating_system="Darwin"
+        expected_operating_system='Darwin'
         ;;
     esac
 

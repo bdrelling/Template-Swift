@@ -30,11 +30,6 @@ jobs:
           debug: true
     outputs:
       test-matrix: ${{ steps.test-matrix.outputs.test-matrix }}
-  between:
-    runs-on: ubuntu-latest
-    needs: [test-matrix]
-    steps:
-      - run: echo '${{ needs.test-matrix.outputs.test-matrix }}'
   swift_test:
     name: ${{ matrix.inputs.platform }} (${{ matrix.inputs.build-method }}, Swift ${{ matrix.inputs.swift-version }})
     runs-on: ${{ matrix.inputs.runner }}
@@ -48,27 +43,10 @@ jobs:
         uses: actions/checkout@v2
       - uses: ./.github/actions/swift-test
         with:
-          scheme: MyModule
+          scheme: ${{ inputs.scheme }}
           platform: ${{ matrix.inputs.platform }}
           build-method: ${{ matrix.inputs.build-method }}
           swift-version: ${{ matrix.inputs.swift-version }}
-  # swift_test_linux:
-  #   name: Linux (Swift ${{ matrix.swift-version }})
-  #   runs-on: ubuntu-latest
-  #   container: swift:${{ matrix.swift-version }}-focal
-  #   needs: [prepare]
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       swift-version: [5.4, 5.6]
-  #   steps:
-  # - name: Checkout
-  #   uses: actions/checkout@v2
-  #     - uses: ./.github/actions/swift-test
-  #       with:
-  #         scheme: MyModule
-  #         platform: Linux
-  #         swift-version: ${{ matrix.swift-version }}
   send_notifications:
     runs-on: ubuntu-latest
     needs: [swift_test]
@@ -81,41 +59,3 @@ jobs:
           title: Tests Failed
           status: Failure
           color: 0xff0000
-  troubleshooting:
-    uses: ./.github/workflows/troubleshooting.yml
-    needs: [swift_test]
-    if: always()
-  # troubleshooting:
-  #   runs-on: ubuntu-latest
-  #   needs: [swift_test]
-  #   if: always()
-  #   steps:
-  #     - name: machine echo github
-  #       env: { CONTENT: '${{ toJSON(github) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo env
-  #       env: { CONTENT: '${{ toJSON(env) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo job
-  #       env: { CONTENT: '${{ toJSON(job) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo steps
-  #       env: { CONTENT: '${{ toJSON(steps) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo runner
-  #       env: { CONTENT: '${{ toJSON(runner) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo secrets
-  #       env: { CONTENT: '${{ toJSON(secrets) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo strategy
-  #       env: { CONTENT: '${{ toJSON(strategy) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo matrix
-  #       env: { CONTENT: '${{ toJSON(matrix) }}' }
-  #       run: 'echo $CONTENT'
-  #     - name: machine echo needs
-  #       run: echo '${{ toJSON(needs) }}'
-  #     - name: machine echo inputs
-  #       env: { CONTENT: '${{ toJSON(inputs) }}' }
-  #       run: 'echo $CONTENT'
