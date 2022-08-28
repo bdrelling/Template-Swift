@@ -88,30 +88,3 @@ test_matrix+="]"
 
 # Echo our Xcode version as GitHub Actions step output.
 echo "::set-output name=test-matrix::${test_matrix}"
-
-# [
-#   #           {
-#   #             runner: macos-11,
-#   #             platform: macOS,
-#   #             build-method: swift,
-#   #             swift-version: 5.4,
-#   #           },
-#   #           {
-#   #             runner: macos-12,
-#   #             platform: macOS,
-#   #             build-method: swift,
-#   #             swift-version: 5.6,
-#   #           },
-#   #           {
-#   #             runner: macos-11,
-#   #             platform: macOS,
-#   #             build-method: xcodebuild,
-#   #             swift-version: 5.4,
-#   #           },
-#   #           {
-#   #             runner: macos-12,
-#   #             platform: macOS,
-#   #             build-method: xcodebuild,
-#   #             swift-version: 5.6,
-#   #           },
-#   #         ]

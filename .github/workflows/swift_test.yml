@@ -2,13 +2,21 @@ name: Swift Test
 
 on:
   workflow_call:
+    inputs:
+      platforms:
+        required: true
+        type: string
+      swift-versions:
+        required: false
+        type: string
+        default: '5.6'
 
 jobs:
   prepare:
     uses: bdrelling/ci/.github/workflows/prepare.yml@main
   # TODO: Add a job here that builds the matrix for the next step, based on minimum_swift_version and platforms
   # Example: https://michaelheap.com/dynamic-matrix-generation-github-actions/
-  test_matrix:
+  test-matrix:
     runs-on: ubuntu-latest
     needs: [prepare]
     steps:
@@ -17,19 +25,23 @@ jobs:
       - id: test-matrix
         uses: ./.github/actions/swift-prepare
         with:
-          platforms: iOS tvOS macOS watchOS Linux
-          swift-versions: 5.3 5.5
+          platforms: ${{ inputs.platforms }}
+          swift-versions: ${{ inputs.swift-versions }}
           debug: true
-      - run: echo '${{ steps.test-matrix.outputs.test-matrix }}'
     outputs:
-      test-inputs: ${{ steps.test-matrix.outputs.test-matrix }}
+      test-matrix: ${{ steps.test-matrix.outputs.test-matrix }}
+  between:
+    runs-on: ubuntu-latest
+    needs: [test-matrix]
+    steps:
+      - run: echo '${{ needs.test-matrix.outputs.test-matrix }}'
   swift_test:
     runs-on: ubuntu-latest
-    needs: [test_matrix]
+    needs: [test-matrix]
     strategy:
       fail-fast: false
       matrix:
-        inputs: ${{ fromJSON(needs.test_matrix.outputs.test-inputs) }}
+        inputs: ${{ fromJSON(needs.test-matrix.outputs.test-matrix) }}
     steps:
       - run: echo '${{ toJSON(matrix.inputs) }}'
   # swift_test_apple:

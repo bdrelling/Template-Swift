@@ -9,3 +9,6 @@ jobs:
   swift_test:
     uses: ./.github/workflows/swift_test.yml
     secrets: inherit
+    with:
+      platforms: macOS Linux
+      swift-versions: 5.4 5.6
