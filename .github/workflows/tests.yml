@@ -29,5 +29,5 @@ jobs:
     secrets: inherit
     with:
       scheme: MyModule
-      platforms: iOS Linux
+      platforms: macOS Linux
       swift-versions: 5.4 5.6
