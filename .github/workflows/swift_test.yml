@@ -8,17 +8,23 @@ jobs:
     uses: bdrelling/ci/.github/workflows/prepare.yml@main
   # TODO: Add a job here that builds the matrix for the next step, based on minimum_swift_version and platforms
   # Example: https://michaelheap.com/dynamic-matrix-generation-github-actions/
-  # build-matrix:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - id: set-matrix
-  #       run: echo '::set-output name=version_matrix::["12","14","16"]'
-  #   outputs:
-  #     version_matrix: ${{ steps.set-matrix.outputs.version_matrix }}
+  test_matrix:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    steps:
+      - id: test-matrix
+        uses: ./.github/actions/swift-prepare
+    outputs:
+      version_matrix: ${{ steps.test-matrix.outputs.test-matrix }}
+  example:
+    runs-on: ubuntu-latest
+    needs: [text_matrix]
+    steps:
+      - run: echo '${{ needs.test_matrix.outputs.version_matrix }}'
   swift_test_apple:
     name: ${{ matrix.inputs.platform }} (Swift ${{ matrix.inputs.swift-version }})
     runs-on: ${{ matrix.inputs.runner }}
-    needs: [prepare]
+    needs: [example]
     strategy:
       fail-fast: false
       matrix:
