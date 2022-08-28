@@ -21,12 +21,8 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Cancel Previous Runs
-      uses: styfle/cancel-workflow-action@0.10.0
-      with:
-        access_token: ${{ github.token }}
     - name: Get Test Matrix
       id: get-test-matrix
-      run: scripts/get_test_matrix.sh ${{ inputs.platforms }} ${{ inputs.swift-versions }}
+      run: scripts/get_test_matrix.sh '${{ inputs.platforms }}' '${{ inputs.swift-versions }}'
       shell: bash
       working-directory: ${{ github.action_path }}
