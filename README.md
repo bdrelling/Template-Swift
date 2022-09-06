@@ -1,10 +1,10 @@
 # Template-Swift
 
 [![CI Status](https://github.com/bdrelling/Template-Swift/actions/workflows/tests.yml/badge.svg)](https://github.com/bdrelling/Template-Swift/actions/workflows/tests.yml)
-[![Latest Release](https://img.shields.io/github/v/tag/bdrelling/Template-Swift?color=blue&label=latest)](https://github.com/bdrelling/Template-Swift/tags)
-[![Swift Compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fbdrelling%2FTemplate-Swift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/bdrelling/Template-Swift)
-[![Platform Compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fbdrelling%2FTemplate-Swift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/bdrelling/Template-Swift)
-[![License](https://img.shields.io/github/license/bdrelling/Template-Swift)](https://github.com/bdrelling/Template-Swift/blob/main/LICENSE)
+[![Latest Release](https://img.shields.io/github/v/tag/bdrelling/Template-Swift?color=blue&label=)](https://github.com/bdrelling/Template-Swift/tags)
+[![Swift Compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fbdrelling%2FTemplate-Swift%2Fbadge%3Ftype%3Dswift-versions&label=)](https://swiftpackageindex.com/bdrelling/Template-Swift)
+[![Platform Compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fbdrelling%2FTemplate-Swift%2Fbadge%3Ftype%3Dplatforms&label=)](https://swiftpackageindex.com/bdrelling/Template-Swift)
+[![License](https://img.shields.io/github/license/bdrelling/Template-Swift?label=)](https://github.com/bdrelling/Template-Swift/blob/main/LICENSE)
 
 [Brian Drelling](https://github.com/bdrelling)'s Swift project template.
 
