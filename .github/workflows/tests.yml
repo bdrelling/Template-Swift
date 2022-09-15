@@ -3,7 +3,7 @@ name: Tests
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: ['*']
     paths:
       - '.github/workflows/tests.yml'
       - 'Plugins/**'
@@ -30,4 +30,4 @@ jobs:
     with:
       scheme: MyModule
       platforms: iOS tvOS macOS watchOS Linux
-      swift-versions: 5.3 5.4 5.5 5.6 5.7
+      swift-versions: 5.7

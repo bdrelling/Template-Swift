@@ -6,5 +6,6 @@ import XCTest
 final class MyModuleTests: XCTestCase {
     func testSuccess() {
         // do nothing
+        XCTFail("Test failure")
     }
 }
